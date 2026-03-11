@@ -1,6 +1,7 @@
 import express from 'express';
 import { userController } from '../controller/user.controller';
 import { commentController } from '../controller/comment.controller';
+import { videoController } from '../controller/video.controller';
 
 
 const router = express.Router();
@@ -11,6 +12,13 @@ router.post("/createUser", userController.createUser);
 router.get("/getUsers", userController.getUsers);
 router.put("/updateUser/:id", userController.updateUser);
 router.delete("/deleteUser/:id", userController.deleteUser);
+
+// Video Routes
+  app.post("/api/createVideo", authenticate, videoController.createVideo);
+  app.get("/api/getVideos", videoController.getVideos);
+  app.get('/api/getvideos/:channelId', authenticate, videoController.getVideosByChannelId);
+  app.put("/api/updateVideo/:id", videoController.updateVideo);
+  app.delete("/api/deleteVideo/:videoId", authenticate, videoController.deleteVideo);
 
  // Comment Routes
   app.post("/api/createComment",  authenticate, commentController.createComment);
