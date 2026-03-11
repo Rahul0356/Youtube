@@ -2,7 +2,13 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import userModel from "../models/user.model.js";
 
-const JWT_SECRET = "your_jwt_secret_key";
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "1h";
+
+if (!JWT_SECRET) {
+  console.error("Missing JWT_SECRET environment variable. Add it to your .env file.");
+  process.exit(1);
+}
 
 // User Controller
 export const userController = {
@@ -47,7 +53,9 @@ export const userController = {
       }
 
       // Generate JWT token
-      const token = jwt.sign({ userId: user._id }, JWT_SECRET);
+      const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
+        expiresIn: JWT_EXPIRES_IN,
+      });
       res.status(200).json({ message: "Login successful", token });
 
     } catch (error) {

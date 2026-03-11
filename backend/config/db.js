@@ -1,11 +1,17 @@
 import mongoose from "mongoose";
 
 const connectDB = async () => {
+  const MONGO_URL = process.env.MONGO_URL;
+
+  if (!MONGO_URL) {
+    console.error(
+      "Missing MONGO_URL environment variable. Add it to your .env file.",
+    );
+    process.exit(1);
+  }
+
   try {
-    await mongoose.connect("YOUR_MONGODB_ATLAS_URL", {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(MONGO_URL);
 
     console.log("MongoDB Connected Successfully");
   } catch (error) {

@@ -1,9 +1,9 @@
 import express from 'express';
-import { userController } from '../controller/user.controller';
-import { commentController } from '../controller/comment.controller';
-import { videoController } from '../controller/video.controller';
-import { channelController } from '../controller/channel.controller';
-import { authenticate } from '../middleware/authmiddleware';
+import { userController } from '../controller/user.controller.js';
+import { commentController } from '../controller/comment.controller.js';
+import { videoController } from '../controller/video.controller.js';
+import { channelController } from '../controller/channel.controller.js';
+import { authenticate } from '../middleware/authmiddleware.js';
 
 
 const router = express.Router();
@@ -16,26 +16,25 @@ router.put("/updateUser/:id", userController.updateUser);
 router.delete("/deleteUser/:id", userController.deleteUser);
 
 // Video Routes
-  app.post("/api/createVideo", authenticate, videoController.createVideo);
-  app.get("/api/getVideos", videoController.getVideos);
-  app.get('/api/getvideos/:channelId', authenticate, videoController.getVideosByChannelId);
-  app.put("/api/updateVideo/:id", videoController.updateVideo);
-  app.delete("/api/deleteVideo/:videoId", authenticate, videoController.deleteVideo);
+router.post("/api/createVideo", authenticate, videoController.createVideo);
+router.get("/api/getVideos", videoController.getVideos);
+router.get('/api/getvideos/:channelId', authenticate, videoController.getVideosByChannelId);
+router.put("/api/updateVideo/:id", videoController.updateVideo);
+router.delete("/api/deleteVideo/:videoId", authenticate, videoController.deleteVideo);
 
- // Comment Routes
-  app.post("/api/createComment",  authenticate, commentController.createComment);
-  app.get("/api/getComments/:id", commentController.getComments);
-  app.put("/api/editComment/:id", authenticate, commentController.editComment);
-  app.delete("/api/deleteComment/:id", commentController.deleteComment);
+// Comment Routes
+router.post("/api/createComment",  authenticate, commentController.createComment);
+router.get("/api/getComments/:id", commentController.getComments);
+router.put("/api/editComment/:id", authenticate, commentController.editComment);
+router.delete("/api/deleteComment/:id", commentController.deleteComment);
 
 
-
-  // Channel Routes
-  app.post("/api/createChannel", authenticate, channelController.createChannel);
-  app.get("/api/getChannels",authenticate, channelController.getChannels); 
-  app.get("/api/getChannels/:id", authenticate, channelController.getChannelById);
-  app.put("/api/updateChannel/:id", authenticate, channelController.updateChannel);
-  app.delete("/api/deleteChannel/:id", authenticate, channelController.deleteChannel);
+// Channel Routes
+router.post("/api/createChannel", authenticate, channelController.createChannel);
+router.get("/api/getChannels",authenticate, channelController.getChannels); 
+router.get("/api/getChannels/:id", authenticate, channelController.getChannelById);
+router.put("/api/updateChannel/:id", authenticate, channelController.updateChannel);
+router.delete("/api/deleteChannel/:id", authenticate, channelController.deleteChannel);
 
 
 export default router;

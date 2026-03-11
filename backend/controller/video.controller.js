@@ -1,4 +1,4 @@
-import videoModel from "../models/VideosModel.js";
+import videoModel from "../models/video.model.js";
 
 // Video Controller
 export const videoController = {

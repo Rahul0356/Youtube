@@ -1,4 +1,4 @@
-import channelModel from "../models/ChannalModel.js"; 
+import channelModel from "../models/chennal.model.js";
 
 export const channelController = {
   // Create Channel
