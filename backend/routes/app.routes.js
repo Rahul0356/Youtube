@@ -3,6 +3,7 @@ import { userController } from '../controller/user.controller';
 import { commentController } from '../controller/comment.controller';
 import { videoController } from '../controller/video.controller';
 import { channelController } from '../controller/channel.controller';
+import { authenticate } from '../middleware/authmiddleware';
 
 
 const router = express.Router();
