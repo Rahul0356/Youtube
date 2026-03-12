@@ -19,14 +19,14 @@ router.delete("/deleteUser/:id", userController.deleteUser);
 router.post("/api/createVideo", authenticate, videoController.createVideo);
 router.get("/api/getVideos", videoController.getVideos);
 router.get('/api/getvideos/:channelId', authenticate, videoController.getVideosByChannelId);
-router.put("/api/updateVideo/:id", videoController.updateVideo);
+router.put("/api/updateVideo/:id", authenticate, videoController.updateVideo);
 router.delete("/api/deleteVideo/:videoId", authenticate, videoController.deleteVideo);
 
 // Comment Routes
 router.post("/api/createComment",  authenticate, commentController.createComment);
 router.get("/api/getComments/:id", commentController.getComments);
 router.put("/api/editComment/:id", authenticate, commentController.editComment);
-router.delete("/api/deleteComment/:id", commentController.deleteComment);
+router.delete("/api/deleteComment/:id", authenticate, commentController.deleteComment);
 
 
 // Channel Routes

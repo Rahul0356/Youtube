@@ -41,12 +41,35 @@ const Form = () => {
 
     // URL changes based on whether the form is for login or registration
     const url = isRegister
-      ? "http://localhost:3000/api/register"
-      : "http://localhost:3000/api/login";
+      ? "http://localhost:5100/register"
+      : "http://localhost:5100/login";
+
+    // Basic frontend validation (username, email, password)
+    if (!formData.username.trim()) {
+      setMessage("Username is required");
+      return;
+    }
+    if (isRegister && !formData.email.trim()) {
+      setMessage("Email is required");
+      return;
+    }
+    if (formData.password.length < 6) {
+      setMessage("Password must be at least 6 characters");
+      return;
+    }
 
     try {
       // Send POST request to server with form data
       const response = await axios.post(url, formData);
+
+      // After successful registration, automatically switch to login view
+      if (isRegister) {
+        setIsRegister(false);
+        setFormData({ username: formData.username, email: formData.email, password: "" });
+        setMessage("Registration successful. Please log in.");
+        return;
+      }
+
       setMessage(response.data.message); // Display response message
 
       // If login is successful, store user data in localStorage and redirect

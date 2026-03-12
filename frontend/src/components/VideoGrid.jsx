@@ -12,15 +12,15 @@ const VideoGrid = ({ searchQuery, selectedFilter }) => {
 
   async function fetchVideos() {
     setLoading(true);
-    const url = "http://localhost:3000/api/getVideos";
+    const url = "http://localhost:5100/api/getVideos";
     const token = localStorage.getItem("token");
 
-    if (!token) return console.error("Token not found in localStorage");
+    const headers = token ? { authorization: `Bearer ${token}` } : undefined;
 
     try {
       const response = await fetch(url, {
         method: "GET",
-        headers: { authorization: `Bearer ${token}` },
+        headers,
       });
 
       if (response.ok) {
@@ -36,15 +36,28 @@ const VideoGrid = ({ searchQuery, selectedFilter }) => {
     }
   }
 
-  // Filter videos by title and selected filter
-  const filteredVideos = data.filter(
-    (video) =>
-      (selectedFilter === "All" ||
-        video.title.toLowerCase().includes(selectedFilter.toLowerCase())) &&
-      video.title.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  // Filter videos by title (search) and category (selectedFilter)
+  const filteredVideos = data.filter((video) => {
+    const matchesTitle = video.title
+      ?.toLowerCase()
+      .includes(searchQuery.toLowerCase());
+
+    const matchesCategory =
+      selectedFilter === "All" ||
+      video.category?.toLowerCase() === selectedFilter.toLowerCase();
+
+    return matchesTitle && matchesCategory;
+  });
 
   if (loading) return <div>Loading...</div>;
+
+  if (!filteredVideos.length) {
+    return (
+      <div className="p-8 text-center text-gray-600">
+        No videos found. Try adding some or check your backend data.
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">

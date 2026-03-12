@@ -31,7 +31,7 @@ const Test = () => {
         setErrorMessage("Authentication token is missing.");
         return;
       }
-      const url = "http://localhost:3000/api/createVideo";
+      const url = "http://localhost:5100/api/createVideo";
       await axios.post(url, videoData, {
         headers: {
           authorization: `Bearer ${token}`,

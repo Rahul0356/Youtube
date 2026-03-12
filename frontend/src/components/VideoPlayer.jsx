@@ -22,18 +22,14 @@ function VideoPlayer() {
 
   // Fetch video details from the API
   const fetchVideo = useCallback(async () => {
-    const url = "http://localhost:3000/api/getVideos";
+    const url = "http://localhost:5100/api/getVideos";
     const token = localStorage.getItem("token");
 
-    if (!token) {
-      console.error("Token not found in localStorage");
-      setLoading(false);
-      return;
-    }
+    const headers = token ? { authorization: `Bearer ${token}` } : undefined;
 
     try {
       const response = await axios.get(url, {
-        headers: { authorization: `Bearer ${token}` },
+        headers,
       });
 
       if (response.status === 200) {
@@ -42,10 +38,15 @@ function VideoPlayer() {
         const savedLikes = localStorage.getItem(`likes_${id}`);
         const savedDislikes = localStorage.getItem(`dislikes_${id}`);
 
-        setLikes(savedLikes ? parseInt(savedLikes) : foundVideo.likes || 0);
-        setDislikes(
-          savedDislikes ? parseInt(savedDislikes) : foundVideo.dislikes || 0,
-        );
+        const baseLikes = Array.isArray(foundVideo?.likes)
+          ? foundVideo.likes.length
+          : Number(foundVideo?.likes || 0);
+        const baseDislikes = Array.isArray(foundVideo?.dislikes)
+          ? foundVideo.dislikes.length
+          : Number(foundVideo?.dislikes || 0);
+
+        setLikes(savedLikes ? parseInt(savedLikes) : baseLikes);
+        setDislikes(savedDislikes ? parseInt(savedDislikes) : baseDislikes);
       } else {
         console.error("Failed to fetch video details");
       }
@@ -60,7 +61,7 @@ function VideoPlayer() {
   const fetchComments = useCallback(async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/getComments/${id}`,
+        `http://localhost:5100/api/getComments/${id}`,
       );
       if (response.status === 200) {
         setComments(response.data);
@@ -91,7 +92,7 @@ function VideoPlayer() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/createComment",
+        "http://localhost:5100/api/createComment",
         commentData,
         {
           headers: {
@@ -120,7 +121,7 @@ function VideoPlayer() {
   const deleteComment = async (id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/api/deleteComment/${id}`,
+        `http://localhost:5100/api/deleteComment/${id}`,
         {
           headers: {
             authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -175,7 +176,7 @@ function VideoPlayer() {
 
     try {
       const response = await axios.put(
-        `http://localhost:3000/api/editComment/${editCommentId}`,
+        `http://localhost:5100/api/editComment/${editCommentId}`,
         { text: editCommentText },
         {
           headers: {
@@ -251,11 +252,24 @@ function VideoPlayer() {
         {/* Video Section */}
         <div className="flex-1 max-w-full bg-white rounded-lg p-4 space-y-6 mx-auto">
           <div className="relative">
-            <video
-              src={video.videoUrl}
-              className="w-full h-auto rounded-lg"
-              controls
-            ></video>
+            {video?.source === "youtube" || video?.embedUrl ? (
+              <div className="w-full aspect-video">
+                <iframe
+                  className="w-full h-full rounded-lg"
+                  src={video.embedUrl || `https://www.youtube.com/embed/${video._id}`}
+                  title={video.title}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+            ) : (
+              <video
+                src={video.videoUrl}
+                className="w-full h-auto rounded-lg"
+                controls
+              ></video>
+            )}
 
             <div className="flex justify-between items-center mt-2">
               <div>

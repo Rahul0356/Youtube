@@ -21,7 +21,7 @@ function ChannelView() {
 
   useEffect(() => {
     const fetchChannelById = async () => {
-      const url = `http://localhost:3000/api/getchannels/${id}`;
+      const url = `http://localhost:5100/api/getchannels/${id}`;
       const token = localStorage.getItem("token");
 
       if (!token) {

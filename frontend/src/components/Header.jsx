@@ -58,14 +58,14 @@ const Header = ({ toggleSidebar, onSearch }) => {
           <span className="text-xl">🔔</span>
         </button>
 
-        {/* Conditional Link to Profile or Form */}
+        {/* Conditional Link to Profile or Sign-in form */}
         <Link to={isLoggedIn ? "/userprofile" : "/form"}>
           {isLoggedIn ? (
             <span className="text-red-600 font-medium border-2 border-red-600 rounded-full flex items-center justify-center w-10 h-10 bg-red-100">
               {firstletter}
             </span>
           ) : (
-            <span className="text-blue-800 text-sm sm:text-base">Sign Up</span>
+            <span className="text-blue-800 text-sm sm:text-base">Sign in</span>
           )}
         </Link>
       </div>

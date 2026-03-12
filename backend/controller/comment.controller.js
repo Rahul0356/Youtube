@@ -34,6 +34,12 @@ export const commentController = {
   async getComments(req, res) {
     try {
       const { id } = req.params;
+
+      // If the ID is not a valid ObjectId, return an empty list (e.g., when using YouTube video IDs)
+      if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
+        return res.status(200).json([]);
+      }
+
       const comments = await commentModel
         .find({ videoId: id })
         .populate("userId videoId");
@@ -83,9 +89,23 @@ export const commentController = {
   async deleteComment(req, res) {
     try {
       const { id } = req.params;
-      await commentModel.findByIdAndDelete(id);
+
+      const comment = await commentModel.findById(id);
+      if (!comment) {
+        return res.status(404).json({ error: "Comment not found" });
+      }
+
+      // Only allow the comment owner to delete
+      if (comment.userId.toString() !== req.user.userId) {
+        return res
+          .status(403)
+          .json({ error: "You are not authorized to delete this comment" });
+      }
+
+      await comment.deleteOne();
       res.status(200).json({ message: "Comment deleted successfully" });
     } catch (error) {
+      console.error("Error deleting comment:", error);
       res.status(500).json({ error: error.message });
     }
   },

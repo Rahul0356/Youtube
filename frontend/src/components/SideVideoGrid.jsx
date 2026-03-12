@@ -8,15 +8,15 @@ const SideVideoGrid = () => {
 
   async function fetchVideos() {
     setLoading(true);
-    const url = "http://localhost:3000/api/getVideos";
+    const url = "http://localhost:5100/api/getVideos";
     const token = localStorage.getItem("token");
 
-    if (!token) return console.error("Token not found in localStorage");
+    const headers = token ? { authorization: `Bearer ${token}` } : undefined;
 
     try {
       const response = await fetch(url, {
         method: "GET",
-        headers: { authorization: `Bearer ${token}` },
+        headers,
       });
 
       if (response.ok) {
@@ -37,6 +37,17 @@ const SideVideoGrid = () => {
   }, []);
 
   if (loading) return <div>Loading...</div>;
+
+  if (!data.length) {
+    return (
+      <div
+        style={styles.grid}
+        className="flex items-center justify-center p-4 text-sm text-gray-600"
+      >
+        No videos available.
+      </div>
+    );
+  }
 
   return (
     <div style={styles.grid}>

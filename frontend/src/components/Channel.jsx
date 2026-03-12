@@ -16,7 +16,7 @@ function Channel() {
 
   // Function to fetch channels from the server
   async function fetchChannels() {
-    const url = "http://localhost:3000/api/getchannels";
+    const url = "http://localhost:5100/api/getchannels";
     const token = localStorage.getItem("token");
 
     // Check if token exists
@@ -64,7 +64,7 @@ function Channel() {
     setLoading(true); // Set loading state to true while request is in progress
 
     const token = localStorage.getItem("token");
-    const url = "http://localhost:3000/api/createChannel";
+    const url = "http://localhost:5100/api/createChannel";
 
     // Data for the new channel
     const data = {
@@ -101,7 +101,7 @@ function Channel() {
     setLoading(true); // Set loading state to true while request is in progress
 
     const token = localStorage.getItem("token");
-    const url = `http://localhost:3000/api/updateChannel/${editChannelId}`;
+    const url = `http://localhost:5100/api/updateChannel/${editChannelId}`;
 
     // Data for updating channel
     const data = {
@@ -139,7 +139,7 @@ function Channel() {
 
   // Function to delete a channel
   const deleteChannel = async (channelId) => {
-    const url = `http://localhost:3000/api/deleteChannel/${channelId}`;
+    const url = `http://localhost:5100/api/deleteChannel/${channelId}`;
     const token = localStorage.getItem("token");
 
     // Check if token exists
